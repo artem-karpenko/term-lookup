@@ -57,32 +57,32 @@ module.exports.lookup = (filename, term) => {
     return new Promise((resolve, reject) => {
         var rs = fs.createReadStream(filename, {encoding: 'ascii'});
         var lookup = new Lookup(term);
-        var reminder = undefined;
+        //var reminder = undefined;
         var dataPos = 0;
         rs.on('data', (data) => {
             //console.log('Processing next ' + data.length + ' bytes');
 
-            if (reminder) {
-                data = reminder + data;
-            }
+            //if (reminder) {
+            //    data = reminder + data;
+            //}
 
-            var dataText = hexTextToChars(data);
+            //var dataText = hexTextToChars(data);
             //console.log('Converted: ' + dataText.chars);
-            dataText.chars.some((char) => {
+            data.split('').some((char) => {
                 lookup.nextToken(char, dataPos);
                 if (lookup.isFound()) {
                     rs.close();
                     resolve(lookup.getFoundPos());
                     return true;
                 }
-                dataPos += 2;
+                dataPos++;
             });
 
-            if (dataText.reminder) {
-                reminder = dataText.reminder;
-            } else {
-                reminder = undefined;
-            }
+            //if (dataText.reminder) {
+            //    reminder = dataText.reminder;
+            //} else {
+            //    reminder = undefined;
+            //}
         });
 
         rs.on('end', () => {
