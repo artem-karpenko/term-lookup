@@ -3,21 +3,23 @@ var textToHexes = require('./term-lookup').textToHexes;
 var hexTextToChars = require('./term-lookup').hexTextToChars;
 
 var term = process.argv[2];
-var filename = process.argv[3] || 'test.txt';
+var filename = process.argv[3];
 
 if (!term) {
     console.error('Term is missing');
     process.exit(1);
 }
 
-var hexTerm = textToHexes(term);
+if (filename) {
+    var hexTerm = textToHexes(term);
+    console.log('Looking for \'' + term + '\' in ' + filename)
 
-console.log('Looking for \'' + term + '\' in ' + filename)
-console.log('Converted term: ' + hexTerm);
-//console.log(hexTextToChars('99697261e9').join());
+    lookup(filename, hexTerm).then((result) => {
+        console.log('Found term at byte offset ' + result);
+    }).catch((reason) => {
+        console.log(reason);
+    });
 
-lookup(filename, hexTerm).then((result) => {
-    console.log('Found term at byte offset ' + result);
-}).catch((reason) => {
-    console.log(reason);
-});
+} else {
+    console.log(hexTextToChars(term).chars.join(''));
+}
