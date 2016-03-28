@@ -55,19 +55,13 @@ var hexTextToChars = (hexText) => {
  */
 module.exports.lookup = (filename, term) => {
     return new Promise((resolve, reject) => {
+        var filesize = fs.statSync(filename).size;
+
         var rs = fs.createReadStream(filename, {encoding: 'ascii'});
         var lookup = new Lookup(term);
         //var reminder = undefined;
-        var dataPos = 0;
+        var dataPos = 0, percentProcessed = 0;
         rs.on('data', (data) => {
-            //console.log('Processing next ' + data.length + ' bytes');
-
-            //if (reminder) {
-            //    data = reminder + data;
-            //}
-
-            //var dataText = hexTextToChars(data);
-            //console.log('Converted: ' + dataText.chars);
             data.split('').some((char) => {
                 lookup.nextToken(char, dataPos);
                 if (lookup.isFound()) {
@@ -78,11 +72,13 @@ module.exports.lookup = (filename, term) => {
                 dataPos++;
             });
 
-            //if (dataText.reminder) {
-            //    reminder = dataText.reminder;
-            //} else {
-            //    reminder = undefined;
-            //}
+            if (!lookup.isFound()) {
+                var newPercentProcessed = +(dataPos * 100 / filesize).toFixed(0);
+                if (newPercentProcessed != percentProcessed) {
+                    percentProcessed = newPercentProcessed;
+                    console.log("Processed " + percentProcessed + "%");
+                }
+            }
         });
 
         rs.on('end', () => {
