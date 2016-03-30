@@ -17,7 +17,7 @@ function Lookup(term) {
         if (termPos == term.length) {
             //console.log('Found!');
             found = true;
-            foundStartPos = tokenPos - term.length;
+            foundStartPos = tokenPos - term.length + 1;
         }
     };
 
