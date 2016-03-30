@@ -1,6 +1,7 @@
 var lookup = require('./term-lookup').lookup;
 var textToHexes = require('./term-lookup').textToHexes;
 var hexTextToChars = require('./term-lookup').hexTextToChars;
+var fs = require('fs');
 
 var term = process.argv[2];
 var filename = process.argv[3];
