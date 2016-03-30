@@ -21,7 +21,7 @@ console.log('Looking for \'' + term + '\' in ' + filename)
 
 lookup(filename, hexTerm).then((result) => {
     console.log('Found term at byte offset ' + result);
-    fs.writeFileSync(term + '.pos', String.valueOf(result));
+    fs.writeFileSync(term + '.pos', new String(result));
 }).catch((reason) => {
     console.log(reason);
 });
