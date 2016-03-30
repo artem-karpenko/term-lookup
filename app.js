@@ -10,16 +10,16 @@ if (!term) {
     process.exit(1);
 }
 
-if (filename) {
-    var hexTerm = textToHexes(term);
-    console.log('Looking for \'' + term + '\' in ' + filename)
-
-    lookup(filename, hexTerm).then((result) => {
-        console.log('Found term at byte offset ' + result);
-    }).catch((reason) => {
-        console.log(reason);
-    });
-
-} else {
-    console.log(hexTextToChars(term).chars.join(''));
+if (!filename) {
+    console.error('Filename is missing');
+    process.exit(1);
 }
+
+var hexTerm = textToHexes(term);
+console.log('Looking for \'' + term + '\' in ' + filename)
+
+lookup(filename, hexTerm).then((result) => {
+    console.log('Found term at byte offset ' + result);
+}).catch((reason) => {
+    console.log(reason);
+});
